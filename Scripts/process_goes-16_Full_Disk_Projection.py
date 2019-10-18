@@ -1,9 +1,7 @@
 #!/usr/bin/python3
 
 # -*- coding: utf-8 -*-
-#======================================================================================================
-# GNC-A Blog Python Tutorial: Part VII
-#======================================================================================================# Required libraries ==================================================================================
+#============================# Required libraries ===================================================
 import sys # Import the "system specific parameters and functions" module
 import matplotlib
 
@@ -11,7 +9,7 @@ import matplotlib.pyplot as plt # Import the Matplotlib package
 from mpl_toolkits.basemap import Basemap # Import the Basemap toolkit&amp;amp;amp;amp;lt;/pre&amp;amp;amp;amp;gt;
 import numpy as np # Import the Numpy package
 
-from remap_V3 import remap # Import the Remap function
+from remap import remap # Import the Remap function
 
 from cpt_convert import loadCPT # Import the CPT convert function
 from matplotlib.colors import LinearSegmentedColormap # Linear interpolation for color maps
@@ -23,7 +21,7 @@ from matplotlib.patches import Rectangle # Library to draw rectangles on the plo
 from osgeo import gdal # Add the GDAL library
 
 matplotlib.use('Agg') # use a non-interactive backend
-from netCDF4 import Dataset                             # Import the NetCDF Python interface
+from netCDF4 import Dataset # Import the NetCDF Python interface
 #======================================================================================================
 
 # Load the Data =======================================================================================
@@ -41,19 +39,20 @@ min_lat = float(geo_extent.geospatial_southbound_latitude)
 max_lat = float(geo_extent.geospatial_northbound_latitude)
 
 # Choose the visualization extent (min lon, min lat, max lon, max lat)
-# South America
-#extent = [-90.0, -60.0, -30.0, 15.0]
+
 # Full Disk
 extent = [min_lon, min_lat, max_lon, max_lat]
 
 # Choose the image resolution (the higher the number the faster the processing is)
 resolution = 2 
+
 # Calculate the image extent required for the reprojection
 H = nc.variables['goes_imager_projection'].perspective_point_height
 x1 = nc.variables['x_image_bounds'][0] * H 
 x2 = nc.variables['x_image_bounds'][1] * H 
 y1 = nc.variables['y_image_bounds'][1] * H 
 y2 = nc.variables['y_image_bounds'][0] * H 
+
 # Call the reprojection funcion
 grid = remap(path, extent, resolution,  x1, y1, x2, y2)
 
@@ -81,17 +80,16 @@ else:
     data = grid.ReadAsArray() - 273.15
     # Make pixels outside the footprint invisible
     data[data <= -180] = np.nan
-#======================================================================================================
+#========================================
 
 
-# Define the size of the saved picture=================================================================
+# Define the size of the saved picture 
 DPI = 150
 fig = plt.figure(figsize=(data.shape[1]/float(DPI), data.shape[0]/float(DPI)), frameon=False, dpi=DPI)
 ax = plt.Axes(fig, [0., 0., 1., 1.])
 ax.set_axis_off()
 fig.add_axes(ax)
 ax = plt.axis('off')
-#======================================================================================================
 
 # Plot the Data =======================================================================================
 
@@ -99,8 +97,8 @@ ax = plt.axis('off')
 bmap = Basemap(llcrnrlon=extent[0], llcrnrlat=extent[1], urcrnrlon=extent[2], urcrnrlat=extent[3], epsg=4326)
 
 # Draw the countries and Brazilian states shapefiles
-bmap.readshapefile('/home/cendas/Documents/VLAB/Shapefiles/BRA_adm1','BRA_adm1',linewidth=0.10,color='#000000')
-bmap.readshapefile('/home/cendas/Documents/VLAB/Shapefiles/ne_10m_coastline','ne_10m_0_coastline',linewidth=0.10,color='#000000')
+bmap.readshapefile('/home/cendas/GOES16-Files/GOES16-Scripts/Shapefiles/BRA_adm1','BRA_adm1',linewidth=0.10,color='#000000')
+bmap.readshapefile('/home/cendas/GOES16-Files/GOES16-Scripts/Shapefiles/ne_10m_coastline','ne_10m_0_coastline',linewidth=0.10,color='#000000')
 
 # Draw parallels and meridians
 bmap.drawparallels(np.arange(-90.0, 90.0, 2.5), linewidth=0.3, dashes=[4, 4], color='white', labels=[False,False,False,False], fmt='%g', labelstyle="+/-", xoffset=-0.80, yoffset=-1.00, size=7)
@@ -108,41 +106,41 @@ bmap.drawmeridians(np.arange(0.0, 360.0, 2.5), linewidth=0.3, dashes=[4, 4], col
 
 if int(Band) <= 6:
     # Converts a CPT file to be used in Python
-    cpt = loadCPT('/home/cendas/Documents/VLAB/Colortables/Square Root Visible Enhancement.cpt')
+    cpt = loadCPT('/home/cendas/GOES16-Files/GOES16-Scripts/Colortables/Square Root Visible Enhancement.cpt')
     # Makes a linear interpolation
     cpt_convert = LinearSegmentedColormap('cpt', cpt)
     # Plot the GOES-16 channel with the converted CPT colors (you may alter the min and max to match your preference)
     bmap.imshow(data, origin='upper', cmap=cpt_convert, vmin=0, vmax=1)  
-    # Insert the colorbar at the bottom
+    
 elif int(Band) == 7:
     # Converts a CPT file to be used in Python
-    cpt = loadCPT('/home/cendas/Documents/VLAB/Colortables/SVGAIR2_TEMP.cpt')
+    cpt = loadCPT('/home/cendas/GOES16-Files/GOES16-Scripts/Colortables/SVGAIR2_TEMP.cpt')
     # Makes a linear interpolation
     cpt_convert = LinearSegmentedColormap('cpt', cpt) 
     # Plot the GOES-16 channel with the converted CPT colors (you may alter the min and max to match your preference)
     bmap.imshow(data, origin='upper', cmap=cpt_convert, vmin=-112.15, vmax=56.85) 
-    # Insert the colorbar at the bottom
+    
 elif int(Band) > 7 and int(Band) < 11:
     # Converts a CPT file to be used in Python
-    cpt = loadCPT('/home/cendas/Documents/VLAB/Colortables/SVGAWVX_TEMP.cpt')
+    cpt = loadCPT('/home/cendas/GOES16-Files/GOES16-Scripts/Colortables/SVGAWVX_TEMP.cpt')
     # Makes a linear interpolation
     cpt_convert = LinearSegmentedColormap('cpt', cpt) 
     # Plot the GOES-16 channel with the converted CPT colors (you may alter the min and max to match your preference)
     bmap.imshow(data, origin='upper', cmap=cpt_convert, vmin=-112.15, vmax=56.85)
-    # Insert the colorbar at the bottom
+    
 elif int(Band) > 10:
     # Converts a CPT file to be used in Python
-    cpt = loadCPT('/home/cendas/Documents/VLAB/Colortables/SST.cpt')   
+    cpt = loadCPT('/home/cendas/GOES16-Files/GOES16-Scripts/Colortables/SST.cpt')   
     # Makes a linear interpolation
     cpt_convert = LinearSegmentedColormap('cpt', cpt) 
     # Plot the GOES-16 channel with the converted CPT colors (you may alter the min and max to match your preference)
     bmap.imshow(data, origin='upper', cmap=cpt_convert, vmin=-80, vmax=-20)
-    # Insert the colorbar at the bottom          
+              
 if int(Band) <= 6:
-    # Insert the colorbar at the bottom
     # Plot the GOES-16 channel with the converted CPT colors (you may alter the min and max to match your preference)
     cb = bmap.colorbar(location='bottom', size = '0.5%', pad = '-1.2%', ticks=[20, 40, 60, 80])    
     cb.ax.set_xticklabels(['20', '40', '60', '80'])
+
 else:
     # Insert the colorbar at the bottom
     cb = bmap.colorbar(location='bottom', size = '2.0%', pad = '-5%')
@@ -197,24 +195,24 @@ seconds = time.time()
 local_time = time.ctime(seconds)
 time_save = local_time[11:19].replace(':','_')
 dateData = local_time.split(" ")
-#date_save = local_time[4:7] + '-' + local_time[8:9] + '-' + local_time[20:25]
+
 try:
     date_saved = dateData[1] + '-' + dateData[3] + '-' + dateData[5]
 except:
     date_saved = dateData[1] + '-' + dateData[2] + '-' + dateData[4]
 
 # Save the result as a PNG
-plt.savefig('/home/cendas/Documents/VLAB/Output/Full_Disk_Projections/G16_C' + str(Band) + '_' + date_saved + '_' + time_save + '.png', dpi=DPI, pad_inches=0, transparent=True)
+plt.savefig('/home/cendas/GOES16-Files/GOES16-Output/Full_Disk_Projections/G16_C' + str(Band) + '_' + date_saved + '_' + time_save + '.png', dpi=DPI, pad_inches=0, transparent=True)
 plt.close()
  
 # Add to the log file (called "G16_Log.txt") the NetCDF file name that I just processed.
 
 # If the file doesn't exists, it will create one.
-with open('/home/cendas/Documents/VLAB/Output/Full_Disk_Projections/G16_Log.txt', 'a') as log:
+with open('/home/cendas/GOES16-Files/GOES16-Output/Full_Disk_Projections/G16_Log.txt', 'a') as log:
  log.write(path.replace('\\\\', '\\') + '\n')
 #======================================================================================================
 
 # Export the result to GeoTIFF
-driver = gdal.GetDriverByName('GTiff')
-driver.CreateCopy('/home/cendas/Documents/VLAB/Output/Full_Disk_Projections/Channel_13.tif', grid, 0)
+#driver = gdal.GetDriverByName('GTiff')
+#driver.CreateCopy('/home/cendas/GOES16-Files/GOES16-Output/Full_Disk_Projections/Channel_13.tif', grid, 0)
 #======================================================================================================

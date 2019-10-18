@@ -10,16 +10,15 @@ import time as t
 # Define KM_PER_DEGREE
 KM_PER_DEGREE = 111.32
 
-# GOES-16 Extent (satellite projection) [llx, lly, urx, ury]
-GOES16_EXTENT = [-5434894.885056, -5434894.885056, 5434894.885056, 5434894.885056]
-
 # GOES-16 Spatial Reference System
 sourcePrj = osr.SpatialReference()
-sourcePrj.ImportFromProj4('+proj=geos +h=35786023.0 +a=6378137.0 +b=6356752.31414 +f=0.00335281068119356027 +lat_0=0.0 +lon_0=-89.5 +sweep=x +no_defs')
+#sourcePrj.ImportFromProj4('+proj=geos +h=35786023.0 +a=6378137.0 +b=6356752.31414 +f=0.00335281068119356027489803406172 +lat_0=0.0 +lon_0=-75 +sweep=x +no_defs')
+sourcePrj.ImportFromProj4('+proj=geos +h=35786000 +a=6378140 +b=6356750 +lon_0=-75 +sweep=x')
 
 # Lat/lon WSG84 Spatial Reference System
 targetPrj = osr.SpatialReference()
-targetPrj.ImportFromProj4('+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs')
+#targetPrj.ImportFromProj4('+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs')
+targetPrj.ImportFromProj4('+proj=latlong +datum=WGS84')
 
 def exportImage(image,path):
     driver = gdal.GetDriverByName('netCDF')
@@ -38,24 +37,32 @@ def getScaleOffset(path):
     nc.close()
     return scale, offset
     
-def remap(path, extent, resolution, driver):
+def remap(path, extent, resolution, x1, y1, x2, y2):
     
-    # Read scale/offset from file
-    scale, offset = getScaleOffset(path)
+    # GOES-16 Extent (satellite projection) [llx, lly, urx, ury]
+    GOES16_EXTENT = [x1, y1, x2, y2]
     
-    # Build connection info based on given driver name
-    if(driver == 'NETCDF'):
-        connectionInfo = 'NETCDF:\"' + path + '\":CMI'
-    else: # HDF5
-        connectionInfo = 'HDF5:\"' + path + '\"://CMI'
+    # Setup NetCDF driver
+    gdal.SetConfigOption('GDAL_NETCDF_BOTTOMUP', 'NO')
         
-    # Open NetCDF file (GOES-16 data)  
-    raw = gdal.Open(connectionInfo, gdal.GA_ReadOnly)
-   
+    # Read scale/offset from file
+    scale, offset = getScaleOffset(path) 
+         
+    try:  
+        connectionInfo = 'NETCDF:\"' + path + '\":CMI'    
+        # Open NetCDF file (GOES-16 data)  
+        raw = gdal.Open(connectionInfo)
+    except:
+        connectionInfo = 'HDF5:\"' + path + '\"://CMI'    
+        # Open NetCDF file (GOES-16 data)  
+        raw = gdal.Open(connectionInfo)    
+                
     # Setup projection and geo-transformation
     raw.SetProjection(sourcePrj.ExportToWkt())
-    raw.SetGeoTransform(getGeoT(GOES16_EXTENT, raw.RasterYSize, raw.RasterXSize))
-        
+    #raw.SetGeoTransform(getGeoT(GOES16_EXTENT, raw.RasterYSize, raw.RasterXSize))
+    raw.SetGeoTransform(getGeoT(GOES16_EXTENT, raw.RasterYSize, raw.RasterXSize))  
+  
+    #print (KM_PER_DEGREE)
     # Compute grid dimension
     sizex = int(((extent[2] - extent[0]) * KM_PER_DEGREE) / resolution)
     sizey = int(((extent[3] - extent[1]) * KM_PER_DEGREE) / resolution)
@@ -92,7 +99,7 @@ def remap(path, extent, resolution, driver):
     # Apply scale and offset
     array = array * scale + offset
     
-    grid.GetRasterBand(1).SetNoDataValue(-1)
+    #grid.GetRasterBand(1).SetNoDataValue(-1)
     grid.GetRasterBand(1).WriteArray(array)
 
     return grid
