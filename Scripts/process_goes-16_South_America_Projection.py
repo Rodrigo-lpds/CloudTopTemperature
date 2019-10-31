@@ -64,6 +64,7 @@ while not bandSetted:
     else:
         bandSetted = True    
 
+
 # Read the data returned by the function 
 if int(Band) <= 6:
     data = grid.ReadAsArray()
@@ -92,8 +93,8 @@ bmap.readshapefile('/home/cendas/GOES16-Files/GOES16-Scripts/Shapefiles/BRA_adm1
 bmap.readshapefile('/home/cendas/GOES16-Files/GOES16-Scripts/Shapefiles/ne_10m_coastline','ne_10m_0_coastline',linewidth=0.10,color='#000000')
 
 # Draw parallels and meridians
-bmap.drawparallels(np.arange(-90.0, 90.0, 2.5), linewidth=0.3, dashes=[4, 4], color='white', labels=[False,False,False,False], fmt='%g', labelstyle="+/-", xoffset=-0.80, yoffset=-1.00, size=7)
-bmap.drawmeridians(np.arange(0.0, 360.0, 2.5), linewidth=0.3, dashes=[4, 4], color='white', labels=[False,False,False,False], fmt='%g', labelstyle="+/-", xoffset=-0.80, yoffset=-1.00, size=7)
+bmap.drawparallels(np.arange(-90.0, 90.0, 5.0), linewidth=0.3, dashes=[4, 4], color='white', labels=[True,False,False,True], fmt='%g', labelstyle="+/-", size=32)
+bmap.drawmeridians(np.arange(0.0, 360.0, 5.0), linewidth=0.3, dashes=[4, 4], color='white', labels=[True,False,False,True], fmt='%g', labelstyle="+/-", size=32)
 
 if int(Band) <= 6:
     # Converts a CPT file to be used in Python
@@ -133,12 +134,15 @@ if int(Band) <= 6:
     cb.ax.set_xticklabels(['20', '40', '60', '80'])
 else:
     # Insert the colorbar at the bottom
-    cb = bmap.colorbar(location='right', size = '2.0%', pad = '-5%')
+    cb = bmap.colorbar(location='right', size = '8.0%', pad = '4%')
 
 cb.outline.set_visible(False)# Remove the colorbar outline
 cb.ax.tick_params(width = 0)# Remove the colorbar ticks 
-cb.ax.xaxis.set_tick_params(pad=-10.5)# Put the colobar labels inside the colorbar
-cb.ax.tick_params(axis='x', colors='yellow', labelsize=6)  # Change the color and size of the colorbar labels
+cb.ax.yaxis.set_tick_params(pad=-8)# Put the colobar labels inside the colorbar
+#cb.ax.tick_params(axis='x', colors='yellow', labelsize=100)  # Change the color and size of the colorbar labels
+#cb.ax.yaxis.set_tick_params(pad = -10) #! -------------------- ADICIONAR AO CODIGO PRINCIPAL --------------------------------------#
+cb.ax.yaxis.set_ticks_position('right') #! -------------------- ADICIONAR AO CODIGO PRINCIPAL --------------------------------------#
+cb.ax.tick_params(labelsize=30)  #! -------------------- ADICIONAR AO CODIGO PRINCIPAL --------------------------------------#
 
 # Search for the Scan start in the file name
 Start = (path[path.find("_s")+2:path.find("_e")])
@@ -153,19 +157,34 @@ dayconventional = datetime.datetime(year,1,1) + datetime.timedelta(dayjulian) # 
 date = dayconventional.strftime('%d-%b-%Y') # Format the date according to the strftime directives
 timeScan = Start [7:9] + ":" + Start [9:11] + ":" + Start [11:13] + " UTC" # Time of the Start of the Scan
 
+# Get the unit based on the channel. If channels 1 trough 6 is Albedo. If channels 7 to 16 is BT.
+if int(Band) <= 6:
+    Unit = "Refletancia"
+else:
+    Unit = "Temperatura de Topo de Nuvem [°C]"
+ 
+# Choose a title for the plot
+Title = " GOES-16 ABI CMI Band " + str(Band) + "       " + Unit + "       " + date + "       " + timeScan
+Latitude = "Latitude"
+Longitude = "Longitude"
+Legenda = "Temperatura de Topo de Nuvem [°C]"
+
 # Add a black rectangle in the bottom to insert the image description
 lon_difference = (extent[2] - extent[0]) # Max Lon - Min Lon
-currentAxis = plt.gca()
-currentAxis.add_patch(Rectangle((extent[0], extent[1]), lon_difference, lon_difference * 0.050, alpha=1, zorder=3, facecolor='black'))
+#currentAxis = plt.gca()
+#currentAxis.add_patch(Rectangle((extent[0], extent[1]), lon_difference, lon_difference * 0.050, alpha=1, zorder=3, facecolor='black'))
 
 # Add the image description inside the black rectangle
-Unit = "Brightness Temperature [°C]"
-Title = " GOES-16 ABI CMI Band " + Band + " " + Wavelenghts[int(Band)] + " " + Unit + " " + date + " " + timeScan
-Institution = "GNC-A BLOG "
-  
 lat_difference = (extent[3] - extent[1]) # Max lat - Min lat
-plt.text(extent[0], extent[1] + lat_difference * 0.018,Title,horizontalalignment='left', color = 'white', size=6)
-plt.text(extent[2], extent[1] + lat_difference * 0.018,Institution, horizontalalignment='right', color = 'yellow', size=6)
+#plt.title(Title)
+#plt.text(extent[0], extent[3] + lat_difference * 0.018,Title,horizontalalignment='left', color = 'black', size=10) #! -------------------- ADICIONAR AO CODIGO PRINCIPAL --------------------------------------#
+#plt.text(extent[0], extent[3] + lat_difference * 0.018,Institution,horizontalalignment='left', color = 'black', size=10)
+plt.text(extent[0] + lon_difference * 0.5, extent[3] + lat_difference * 0.035,Title, horizontalalignment='center', color = 'black', size=40)
+plt.text(extent[0] + lon_difference * 0.5, extent[3] + lat_difference * 0.065," ", horizontalalignment='center', color = 'black', size=18)
+plt.text(extent[0] + lon_difference * 0.5, extent[1] - lat_difference * 0.075,Longitude, horizontalalignment='center', color = 'black', size=40)
+plt.text(extent[0] + lon_difference * 0.5, extent[1] - lat_difference * 0.15," ", horizontalalignment='center', color = 'black', size=18)    #! -------------------- ADICIONAR AO CODIGO PRINCIPAL --------------------------------------#
+plt.text(extent[0]- lon_difference * 0.15, extent[1] + lat_difference * 0.5 ,Latitude, verticalalignment ='center', rotation = "vertical", color = 'black', size=40) 
+plt.text(extent[2] + lon_difference * 0.2, extent[1] + lat_difference * 0.5 ,Legenda, verticalalignment ='center', rotation = "vertical", color = 'black', size=40)
 
 # Add logos / images to the plot
 #logo_INPE = plt.imread('/home/cendas/Documents/VLAB/Logos/INPE Logo.png')
@@ -174,6 +193,16 @@ plt.text(extent[2], extent[1] + lat_difference * 0.018,Institution, horizontalal
 #plt.figimage(logo_INPE, 10, 40, zorder=3, alpha = 1, origin = 'upper')
 #plt.figimage(logo_NOAA, 110, 40, zorder=3, alpha = 1, origin = 'upper')
 #plt.figimage(logo_GOES, 195, 40, zorder=3, alpha = 1, origin = 'upper')
+
+
+
+logo_Baia = plt.imread("/home/cendas/GOES16-Files/GOES16-Scripts/Logos/logo_lamce.png")
+logo_Lamce = plt.imread("/home/cendas/GOES16-Files/GOES16-Scripts/Logos/baia_resized1.png")
+
+plt.figimage(logo_Baia,  1000, 80, zorder=3, alpha = 1, origin = 'upper') #! -------------------- ADICIONAR AO CODIGO PRINCIPAL --------------------------------------#
+plt.figimage(logo_Lamce, 0, 90, zorder=3, alpha = 1, origin = 'upper')
+
+
 
 seconds = time.time()
 local_time = time.ctime(seconds)
@@ -186,13 +215,13 @@ except:
     date_saved = dateData[1] + '-' + dateData[2] + '-' + dateData[4]
 
 # Save the result as a PNG
-plt.savefig('/home/cendas/GOES16-Files/GOES16-Output/South_America_Projections/G16_C' + str(Band) + '_' + date_saved + '_' + time_save + '.png', dpi=DPI, pad_inches=0, transparent=True)
+plt.savefig('/home/cendas/GOES16-Files/GOES16-Output/South_America_Projections/G16_C' + str(Band) + '_' + date_saved + '_' + time_save + '.tif', dpi=DPI, pad_inches=0,bbox_inches='tight', transparent=True)
 plt.close()
  
 # Add to the log file (called "G16_Log.txt") the NetCDF file name that I just processed.
 # If the file doesn't exists, it will create one.
-with open('/home/cendas/GOES16-Files/GOES16-Output/South_America_Projections/G16_Log.txt', 'a') as log:
- log.write(path.replace('\\\\', '\\') + '\n')
+#with open('/home/cendas/GOES16-Files/GOES16-Output/South_America_Projections/G16_Log.txt', 'a') as log:
+ #log.write(path.replace('\\\\', '\\') + '\n')
 #======================================================================================================
 
 # Export the result to GeoTIFF
