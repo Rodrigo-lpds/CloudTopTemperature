@@ -1,28 +1,22 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
-
 #==========================# Required libraries ======================================================
 import sys # Import the "system specific parameters and functions" module
-import matplotlib
-
-import matplotlib.pyplot as plt # Import the Matplotlib package
-from mpl_toolkits.basemap import Basemap # Import the Basemap toolkit&amp;amp;amp;amp;lt;/pre&amp;amp;amp;amp;gt;
-import numpy as np # Import the Numpy package
-
-from remap import remap # Import the Remap function
-
-from cpt_convert import loadCPT # Import the CPT convert function
-from matplotlib.colors import LinearSegmentedColormap # Linear interpolation for color maps
-
 import datetime # Library to convert julian day to dd-mm-yyyy
 import time 
-
+import matplotlib
+import matplotlib.pyplot as plt # Import the Matplotlib package
+import numpy as np # Import the Numpy package
+from mpl_toolkits.basemap import Basemap # Import the Basemap toolkit&amp;amp;amp;amp;lt;/pre&amp;amp;amp;amp;gt;
+from remap import remap # Import the Remap function
+from cpt_convert import loadCPT # Import the CPT convert function
+from matplotlib.colors import LinearSegmentedColormap # Linear interpolation for color maps
 from matplotlib.patches import Rectangle # Library to draw rectangles on the plot
 from osgeo import gdal # Add the GDAL library
-
-matplotlib.use('Agg') # use a non-interactive backend
 from netCDF4 import Dataset # Import the NetCDF Python interface
 #======================================================================================================
+
+matplotlib.use('Agg') # use a non-interactive backend
 
 # Load the Data =======================================================================================
 # Path to the GOES-16 image file
@@ -38,13 +32,11 @@ max_lon = float(geo_extent.geospatial_eastbound_longitude)
 min_lat = float(geo_extent.geospatial_southbound_latitude)
 max_lat = float(geo_extent.geospatial_northbound_latitude)
 
-# Choose the visualization extent (min lon, min lat, max lon, max lat)
-
 # South America
+# Choose the visualization extent (min lon, min lat, max lon, max lat)
 extent = [-90.0, -60.0, -30.0, 15.0]
 
-
-# Choose the image resolution (the higher the number the faster the processing is)
+# Choose the image resolution (the higher the number the faster the processing is) 
 resolution = 2 
 
 # Calculate the image extent required for the reprojection
@@ -64,10 +56,9 @@ bands = ['M6C','M3C']
 bandLenghts = ['01','02','03','04','05','06','07','08','09','10','11','12','13','14','15','16']
 
 mode = 0
-
 while not bandSetted: 
     Band = (path[path.find(bands[mode])+3:path.find("_G16")])
-    #if (len(Band) != 2) and (Band not in bandBounds):
+    
     if (Band not in bandLenghts):    
         mode +=1  
     else:
@@ -83,7 +74,6 @@ else:
     data[data <= -180] = np.nan
 #======================================================================================================
 
-
 # Define the size of the saved picture=================================================================
 DPI = 150
 fig = plt.figure(figsize=(data.shape[1]/float(DPI), data.shape[0]/float(DPI)), frameon=False, dpi=DPI)
@@ -94,7 +84,6 @@ ax = plt.axis('off')
 #======================================================================================================
 
 # Plot the Data =======================================================================================
-
 # Create the basemap reference for the Rectangular Projection
 bmap = Basemap(llcrnrlon=extent[0], llcrnrlat=extent[1], urcrnrlon=extent[2], urcrnrlat=extent[3], epsg=4326)
 
@@ -139,23 +128,20 @@ elif int(Band) > 10:
     bmap.imshow(data, origin='upper', cmap=cpt_convert, vmin=-80, vmax=-20)
           
 if int(Band) <= 6:
-    
-    # Plot the GOES-16 channel with the converted CPT colors (you may alter the min and max to match your preference)
-    cb = bmap.colorbar(location='bottom', size = '0.5%', pad = '-1.2%', ticks=[20, 40, 60, 80])    
+    # Insert the colorbar at the bottom
+    cb = bmap.colorbar(location='right', size = '0.5%', pad = '-1.2%', ticks=[20, 40, 60, 80])    
     cb.ax.set_xticklabels(['20', '40', '60', '80'])
 else:
     # Insert the colorbar at the bottom
-    cb = bmap.colorbar(location='bottom', size = '2.0%', pad = '-5%')
+    cb = bmap.colorbar(location='right', size = '2.0%', pad = '-5%')
 
-cb.outline.set_visible(False)           # Remove the colorbar outline
-cb.ax.tick_params(width = 0)            # Remove the colorbar ticks 
-cb.ax.xaxis.set_tick_params(pad=-10.5)   # Put the colobar labels inside the colorbar
+cb.outline.set_visible(False)# Remove the colorbar outline
+cb.ax.tick_params(width = 0)# Remove the colorbar ticks 
+cb.ax.xaxis.set_tick_params(pad=-10.5)# Put the colobar labels inside the colorbar
 cb.ax.tick_params(axis='x', colors='yellow', labelsize=6)  # Change the color and size of the colorbar labels
-
 
 # Search for the Scan start in the file name
 Start = (path[path.find("_s")+2:path.find("_e")])
-
 
 # Create a GOES-16 Bands string array
 Wavelenghts = ['[]','[0.47 μm]','[0.64 μm]','[0.865 μm]','[1.378 μm]','[1.61 μm]','[2.25 μm]','[3.90 μm]','[6.19 μm]','[6.95 μm]','[7.34 μm]','[8.50 μm]','[9.61 μm]','[10.35 μm]','[11.20 μm]','[12.30 μm]','[13.30 μm]']
@@ -165,23 +151,21 @@ year = int(Start[0:4])
 dayjulian = int(Start[4:7]) - 1 # Subtract 1 because the year starts at "0"
 dayconventional = datetime.datetime(year,1,1) + datetime.timedelta(dayjulian) # Convert from julian to conventional
 date = dayconventional.strftime('%d-%b-%Y') # Format the date according to the strftime directives
-
 timeScan = Start [7:9] + ":" + Start [9:11] + ":" + Start [11:13] + " UTC" # Time of the Start of the Scan
-
-Unit = "Brightness Temperature [°C]"
-Title = " GOES-16 ABI CMI Band " + Band + " " + Wavelenghts[int(Band)] + " " + Unit + " " + date + " " + timeScan
-Institution = "GNC-A BLOG "
 
 # Add a black rectangle in the bottom to insert the image description
 lon_difference = (extent[2] - extent[0]) # Max Lon - Min Lon
 currentAxis = plt.gca()
 currentAxis.add_patch(Rectangle((extent[0], extent[1]), lon_difference, lon_difference * 0.050, alpha=1, zorder=3, facecolor='black'))
 
-# Add the image description inside the black rectangle  
+# Add the image description inside the black rectangle
+Unit = "Brightness Temperature [°C]"
+Title = " GOES-16 ABI CMI Band " + Band + " " + Wavelenghts[int(Band)] + " " + Unit + " " + date + " " + timeScan
+Institution = "GNC-A BLOG "
+  
 lat_difference = (extent[3] - extent[1]) # Max lat - Min lat
 plt.text(extent[0], extent[1] + lat_difference * 0.018,Title,horizontalalignment='left', color = 'white', size=6)
 plt.text(extent[2], extent[1] + lat_difference * 0.018,Institution, horizontalalignment='right', color = 'yellow', size=6)
-
 
 # Add logos / images to the plot
 #logo_INPE = plt.imread('/home/cendas/Documents/VLAB/Logos/INPE Logo.png')
@@ -190,8 +174,6 @@ plt.text(extent[2], extent[1] + lat_difference * 0.018,Institution, horizontalal
 #plt.figimage(logo_INPE, 10, 40, zorder=3, alpha = 1, origin = 'upper')
 #plt.figimage(logo_NOAA, 110, 40, zorder=3, alpha = 1, origin = 'upper')
 #plt.figimage(logo_GOES, 195, 40, zorder=3, alpha = 1, origin = 'upper')
-
-
 
 seconds = time.time()
 local_time = time.ctime(seconds)
@@ -208,7 +190,6 @@ plt.savefig('/home/cendas/GOES16-Files/GOES16-Output/South_America_Projections/G
 plt.close()
  
 # Add to the log file (called "G16_Log.txt") the NetCDF file name that I just processed.
-
 # If the file doesn't exists, it will create one.
 with open('/home/cendas/GOES16-Files/GOES16-Output/South_America_Projections/G16_Log.txt', 'a') as log:
  log.write(path.replace('\\\\', '\\') + '\n')
