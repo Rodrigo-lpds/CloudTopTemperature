@@ -55,6 +55,7 @@ bandSetted = False
 bands = ['M6C','M3C'] 
 bandLenghts = ['01','02','03','04','05','06','07','08','09','10','11','12','13','14','15','16']
 
+#Set the exactly band format to use
 mode = 0
 while not bandSetted: 
     Band = (path[path.find(bands[mode])+3:path.find("_G16")])
@@ -78,10 +79,11 @@ else:
 # Define the size of the saved picture=================================================================
 DPI = 150
 fig = plt.figure(figsize=(data.shape[1]/float(DPI), data.shape[0]/float(DPI)), frameon=False, dpi=DPI)
-ax = plt.Axes(fig, [0., 0., 1., 1.])
+ax = plt.Axes(fig, [0., 0., 1., 1.]) #a resampled image to fill the entire figure
 ax.set_axis_off()
 fig.add_axes(ax)
 ax = plt.axis('off')
+
 #======================================================================================================
 
 # Plot the Data =======================================================================================
@@ -130,7 +132,7 @@ elif int(Band) > 10:
           
 if int(Band) <= 6:
     # Insert the colorbar at the bottom
-    cb = bmap.colorbar(location='right', size = '0.5%', pad = '-1.2%', ticks=[20, 40, 60, 80])    
+    cb = bmap.colorbar(location='right', size = '8.0%', pad = '4%', ticks=[20, 40, 60, 80])    
     cb.ax.set_xticklabels(['20', '40', '60', '80'])
 else:
     # Insert the colorbar at the bottom
@@ -140,9 +142,9 @@ cb.outline.set_visible(False)# Remove the colorbar outline
 cb.ax.tick_params(width = 0)# Remove the colorbar ticks 
 cb.ax.yaxis.set_tick_params(pad=-8)# Put the colobar labels inside the colorbar
 #cb.ax.tick_params(axis='x', colors='yellow', labelsize=100)  # Change the color and size of the colorbar labels
-#cb.ax.yaxis.set_tick_params(pad = -10) #! -------------------- ADICIONAR AO CODIGO PRINCIPAL --------------------------------------#
-cb.ax.yaxis.set_ticks_position('right') #! -------------------- ADICIONAR AO CODIGO PRINCIPAL --------------------------------------#
-cb.ax.tick_params(labelsize=30)  #! -------------------- ADICIONAR AO CODIGO PRINCIPAL --------------------------------------#
+#cb.ax.yaxis.set_tick_params(pad = -10) 
+cb.ax.yaxis.set_ticks_position('right') 
+cb.ax.tick_params(labelsize=30) 
 
 # Search for the Scan start in the file name
 Start = (path[path.find("_s")+2:path.find("_e")])
@@ -167,7 +169,7 @@ else:
 Title = " GOES-16 ABI CMI Band " + str(Band) + "       " + Unit + "       " + date + "       " + timeScan
 Latitude = "Latitude"
 Longitude = "Longitude"
-Legenda = "Temperatura de Topo de Nuvem [°C]"
+ColorBarLegend = "Temperatura de Topo de Nuvem [°C]"
 
 # Add a black rectangle in the bottom to insert the image description
 lon_difference = (extent[2] - extent[0]) # Max Lon - Min Lon
@@ -177,14 +179,16 @@ lon_difference = (extent[2] - extent[0]) # Max Lon - Min Lon
 # Add the image description inside the black rectangle
 lat_difference = (extent[3] - extent[1]) # Max lat - Min lat
 #plt.title(Title)
-#plt.text(extent[0], extent[3] + lat_difference * 0.018,Title,horizontalalignment='left', color = 'black', size=10) #! -------------------- ADICIONAR AO CODIGO PRINCIPAL --------------------------------------#
+#plt.text(extent[0], extent[3] + lat_difference * 0.018,Title,horizontalalignment='left', color = 'black', size=10) 
 #plt.text(extent[0], extent[3] + lat_difference * 0.018,Institution,horizontalalignment='left', color = 'black', size=10)
 plt.text(extent[0] + lon_difference * 0.5, extent[3] + lat_difference * 0.035,Title, horizontalalignment='center', color = 'black', size=40)
 plt.text(extent[0] + lon_difference * 0.5, extent[3] + lat_difference * 0.065," ", horizontalalignment='center', color = 'black', size=18)
+
 plt.text(extent[0] + lon_difference * 0.5, extent[1] - lat_difference * 0.075,Longitude, horizontalalignment='center', color = 'black', size=40)
-plt.text(extent[0] + lon_difference * 0.5, extent[1] - lat_difference * 0.15," ", horizontalalignment='center', color = 'black', size=18)    #! -------------------- ADICIONAR AO CODIGO PRINCIPAL --------------------------------------#
+plt.text(extent[0] + lon_difference * 0.5, extent[1] - lat_difference * 0.15," ", horizontalalignment='center', color = 'black', size=18)    
+
 plt.text(extent[0]- lon_difference * 0.15, extent[1] + lat_difference * 0.5 ,Latitude, verticalalignment ='center', rotation = "vertical", color = 'black', size=40) 
-plt.text(extent[2] + lon_difference * 0.2, extent[1] + lat_difference * 0.5 ,Legenda, verticalalignment ='center', rotation = "vertical", color = 'black', size=40)
+plt.text(extent[2] + lon_difference * 0.2, extent[1] + lat_difference * 0.5 ,ColorBarLegend, verticalalignment ='center', rotation = "vertical", color = 'black', size=40)
 
 # Add logos / images to the plot
 #logo_INPE = plt.imread('/home/cendas/Documents/VLAB/Logos/INPE Logo.png')
@@ -195,18 +199,19 @@ plt.text(extent[2] + lon_difference * 0.2, extent[1] + lat_difference * 0.5 ,Leg
 #plt.figimage(logo_GOES, 195, 40, zorder=3, alpha = 1, origin = 'upper')
 
 
+logo_Lamce = plt.imread("/home/cendas/GOES16-Files/GOES16-Scripts/Logos/logo_lamce.png")
+logo_Baia = plt.imread("/home/cendas/GOES16-Files/GOES16-Scripts/Logos/baia_resized1.png")
 
-logo_Baia = plt.imread("/home/cendas/GOES16-Files/GOES16-Scripts/Logos/logo_lamce.png")
-logo_Lamce = plt.imread("/home/cendas/GOES16-Files/GOES16-Scripts/Logos/baia_resized1.png")
 
-plt.figimage(logo_Baia,  1000, 80, zorder=3, alpha = 1, origin = 'upper') #! -------------------- ADICIONAR AO CODIGO PRINCIPAL --------------------------------------#
-plt.figimage(logo_Lamce, 0, 90, zorder=3, alpha = 1, origin = 'upper')
+plt.figimage(logo_Lamce,  3500, 80, zorder=3, alpha = 1, origin = 'upper') 
+plt.figimage(logo_Baia, 500, 90, zorder=3, alpha = 1, origin = 'upper')
 
 
 
 seconds = time.time()
 local_time = time.ctime(seconds)
-time_save = local_time[11:19].replace(':','_')
+time_saved = timeScan.replace(':','_')
+
 dateData = local_time.split(" ")
 
 try:
@@ -215,13 +220,13 @@ except:
     date_saved = dateData[1] + '-' + dateData[2] + '-' + dateData[4]
 
 # Save the result as a PNG
-plt.savefig('/home/cendas/GOES16-Files/GOES16-Output/South_America_Projections/G16_C' + str(Band) + '_' + date_saved + '_' + time_save + '.tif', dpi=DPI, pad_inches=0,bbox_inches='tight', transparent=True)
+plt.savefig('/home/cendas/GOES16-Files/GOES16-Output/South_America_Projections/G16_C' + str(Band) + '_' + date + '_' + time_saved + '.tif', dpi=DPI, pad_inches=0,bbox_inches='tight', transparent=True)
 plt.close()
  
 # Add to the log file (called "G16_Log.txt") the NetCDF file name that I just processed.
 # If the file doesn't exists, it will create one.
-#with open('/home/cendas/GOES16-Files/GOES16-Output/South_America_Projections/G16_Log.txt', 'a') as log:
- #log.write(path.replace('\\\\', '\\') + '\n')
+with open('/home/cendas/GOES16-Files/GOES16-Output/South_America_Projections/G16_Log.txt', 'a') as log:
+ log.write(path.replace('\\\\', '\\') + '\n')
 #======================================================================================================
 
 # Export the result to GeoTIFF

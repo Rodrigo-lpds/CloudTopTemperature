@@ -193,7 +193,8 @@ plt.text(extent[2], extent[1] + lat_difference * 0.018,Institution, horizontalal
 
 seconds = time.time()
 local_time = time.ctime(seconds)
-time_save = local_time[11:19].replace(':','_')
+time_saved = timeScan.replace(':','_')
+
 dateData = local_time.split(" ")
 
 try:
@@ -202,7 +203,7 @@ except:
     date_saved = dateData[1] + '-' + dateData[2] + '-' + dateData[4]
 
 # Save the result as a PNG
-plt.savefig('/home/cendas/GOES16-Files/GOES16-Output/Full_Disk_Projections/G16_C' + str(Band) + '_' + date_saved + '_' + time_save + '.png', dpi=DPI, pad_inches=0, transparent=True)
+plt.savefig('/home/cendas/GOES16-Files/GOES16-Output/South_America_Projections/G16_C' + str(Band) + '_' + date + '_' + time_saved + '.tif', dpi=DPI, pad_inches=0,bbox_inches='tight', transparent=True)
 plt.close()
  
 # Add to the log file (called "G16_Log.txt") the NetCDF file name that I just processed.
