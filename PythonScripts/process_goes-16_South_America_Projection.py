@@ -122,9 +122,18 @@ elif int(Band) > 7 and int(Band) < 11:
     # Plot the GOES-16 channel with the converted CPT colors (you may alter the min and max to match your preference)
     bmap.imshow(data, origin='upper', cmap=cpt_convert, vmin=-112.15, vmax=56.85)
 
-elif int(Band) > 10:
+elif int(Band) > 10 and int(Band) !=13:
     # Converts a CPT file to be used in Python
     cpt = loadCPT('/home/cendas/GOES16-Files/CodeProcess/Colortables/SST.cpt')   
+    # Makes a linear interpolation
+    cpt_convert = LinearSegmentedColormap('cpt', cpt) 
+    # Plot the GOES-16 channel with the converted CPT colors (you may alter the min and max to match your preference)
+    bmap.imshow(data, origin='upper', cmap=cpt_convert, vmin=-80, vmax=-20)
+
+elif int(Band)==13:
+    data[data>-20] = np.nan
+    # Converts a CPT file to be used in Python
+    cpt = loadCPT('/home/cendas/GOES16-Files/CodeProcess/Colortables/Rainbow.cpt')   
     # Makes a linear interpolation
     cpt_convert = LinearSegmentedColormap('cpt', cpt) 
     # Plot the GOES-16 channel with the converted CPT colors (you may alter the min and max to match your preference)
@@ -199,8 +208,8 @@ plt.text(extent[2] + lon_difference * 0.2, extent[1] + lat_difference * 0.5 ,Col
 #plt.figimage(logo_GOES, 195, 40, zorder=3, alpha = 1, origin = 'upper')
 
 
-logo_Lamce = plt.imread("/home/cendas/GOES16-Files/CodeProcess/Logos/logo_lamce.png")
-logo_Baia = plt.imread("/home/cendas/GOES16-Files/CodeProcess/Logos/baia_resized1.png")
+logo_Lamce = plt.imread("/home/cendas/GOES16-Files/CodeProcess/Logos/logo_lamce_SA.png")
+logo_Baia = plt.imread("/home/cendas/GOES16-Files/CodeProcess/Logos/baia_logo_SA.png")
 
 
 plt.figimage(logo_Lamce,  3500, 80, zorder=3, alpha = 1, origin = 'upper') 

@@ -94,10 +94,20 @@ else:
     
     for yPixelAxis in range (0,data.shape[0],1):
         for xPixelAxis in range (0,data.shape[1],1):
-            if countId ==  (data.shape[0] * data.shape[1]) - 1: #If reaches to the last data doesn't put the comma                                                                                                #Longitude                                           #Latitude
-                 f.write("{ \"type\": \"Feature\", \"properties\": { \"id\": \""+ str(countId) +"\",\"temperature\":" + str(data[yPixelAxis][xPixelAxis]) +" }, \"geometry\": { \"type\": \"Point\", \"coordinates\": [" + str(extent[0] + ((xPixelAxis + 1) * long_factor)) + "," +str(extent[3] - ((yPixelAxis + 1) * lat_factor))+"] } }\n")        
-            else:
-               f.write("{ \"type\": \"Feature\", \"properties\": { \"id\": \""+ str(countId) +"\",\"temperature\":" + str(data[yPixelAxis][xPixelAxis]) +" }, \"geometry\": { \"type\": \"Point\", \"coordinates\": [" + str(extent[0] + ((xPixelAxis + 1) * long_factor)) + "," +str(extent[3] - ((yPixelAxis + 1) * lat_factor))+"] } },\n")        
+            temperature = data[yPixelAxis][xPixelAxis] 
+            
+            if (temperature < -80 or temperature >-20):
+              pass
+           
+            else:  
+              f.write("{ \"type\": \"Feature\", \"properties\": { \"id\": \""+ str(countId) +"\",\"temperature\":" + str(temperature) +" }, \"geometry\": { \"type\": \"Point\", \"coordinates\": [" + str(extent[0] + ((xPixelAxis + 1) * long_factor)) + "," +str(extent[3] - ((yPixelAxis + 1) * lat_factor))+"] } }")   
+            
+            
+              if countId  ==  (data.shape[0] * data.shape[1]) - 1: #If reaches to the last data doesn't put the comma 
+                f.write("\n")         
+              else:
+                f.write(",\n") 
+             
             countId +=1
     
     f.write("   ]\n")
