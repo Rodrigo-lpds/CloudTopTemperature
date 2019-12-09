@@ -229,7 +229,7 @@ except:
     date_saved = dateData[1] + '-' + dateData[2] + '-' + dateData[4]
 
 # Save the result as a PNG
-plt.savefig('/home/cendas/GOES16-Files/Output/South_America/Projections/SA_G16_C' + str(Band) + '_' + date + '_' + time_saved + '.tif', dpi=DPI, pad_inches=0,bbox_inches='tight', transparent=True)
+plt.savefig('/home/cendas/GOES16-Files/Output/South_America/Projections/CH'+ str(Band) +'/SA_G16_C' + str(Band) + '_' + date + '_' + time_saved + '.tif', dpi=DPI, pad_inches=0,bbox_inches='tight', transparent=True)
 plt.close()
  
 # Add to the log file (called "G16_Log.txt") the NetCDF file name that I just processed.
