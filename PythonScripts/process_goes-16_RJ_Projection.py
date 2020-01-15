@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
+#!/home/cendas/miniconda3/envs/DataEnv/bin/python3
 #=========================# Required libraries ===========================================================
 import sys # Import the "system specific parameters and functions" module
 import matplotlib
@@ -7,7 +8,7 @@ import matplotlib
 import matplotlib.pyplot as plt # Import the Matplotlib package
 from mpl_toolkits.basemap import Basemap # Import the Basemap toolkit&amp;amp;amp;amp;lt;/pre&amp;amp;amp;amp;gt;
 import numpy as np # Import the Numpy package
-
+from numpy.ma import masked_array
 from remap import remap # Import the Remap function
 
 from cpt_convert import loadCPT # Import the CPT convert function
@@ -102,47 +103,43 @@ bmap.readshapefile('/home/cendas/GOES16-Files/CodeProcess/Shapefiles/ne_10m_coas
 bmap.drawparallels(np.arange(-90.0, 90.0, 5), linewidth=0.3, dashes=[4, 4], color='white', labels=[True,False,False,True], fmt='%g', labelstyle="+/-", size=10)
 bmap.drawmeridians(np.arange(0.0, 360.0, 5), linewidth=0.3, dashes=[4, 4], color='white', labels=[True,False,False,True], fmt='%g', labelstyle="+/-", size=10)
 
-if int(Band) <= 6:
+dataA = masked_array(data,data<-20) #TIRA OS MENORES QUE -20
+dataB = masked_array(data,data>=-20)#TIRA OS MAIORES QUE -20
+
+if int(Band) <=7 or int(Band) == 15:
     # Converts a CPT file to be used in Python
     cpt = loadCPT('/home/cendas/GOES16-Files/CodeProcess/Colortables/Square Root Visible Enhancement.cpt')
     # Makes a linear interpolation
     cpt_convert = LinearSegmentedColormap('cpt', cpt)
     # Plot the GOES-16 channel with the converted CPT colors (you may alter the min and max to match your preference)
     bmap.imshow(data, origin='upper', cmap=cpt_convert, vmin=0, vmax=1)  
-    # Insert the colorbar at the bottom
-elif int(Band) == 7:
-    # Converts a CPT file to be used in Python
-    cpt = loadCPT('/home/cendas/GOES16-Files/CodeProcess/Colortables/SVGAIR2_TEMP.cpt')
-    # Makes a linear interpolation
-    cpt_convert = LinearSegmentedColormap('cpt', cpt) 
-    # Plot the GOES-16 channel with the converted CPT colors (you may alter the min and max to match your preference)
-    bmap.imshow(data, origin='upper', cmap=cpt_convert, vmin=-112.15, vmax=56.85) 
-    
-elif int(Band) > 7 and int(Band) < 11:
-    # Converts a CPT file to be used in Python
-    cpt = loadCPT('/home/cendas/GOES16-Files/CodeProcess/Colortables/SVGAWVX_TEMP.cpt')
-    # Makes a linear interpolation
-    cpt_convert = LinearSegmentedColormap('cpt', cpt) 
-    # Plot the GOES-16 channel with the converted CPT colors (you may alter the min and max to match your preference)
-    bmap.imshow(data, origin='upper', cmap=cpt_convert, vmin=-112.15, vmax=56.85)
-    
-elif int(Band) > 10 and int(Band) !=13:
-    # Converts a CPT file to be used in Python
-    cpt = loadCPT('/home/cendas/GOES16-Files/CodeProcess/Colortables/SST.cpt')   
-    # Makes a linear interpolation
-    cpt_convert = LinearSegmentedColormap('cpt', cpt) 
-    # Plot the GOES-16 channel with the converted CPT colors (you may alter the min and max to match your preference)
-    bmap.imshow(data, origin='upper', cmap=cpt_convert, vmin=-80, vmax=-20)
 
-elif int(Band)==13:
-    data[data>-20] = np.nan
+elif  int(Band) >7 and int(Band) <=10:
     # Converts a CPT file to be used in Python
-    cpt = loadCPT('/home/cendas/GOES16-Files/CodeProcess/Colortables/Rainbow.cpt')   
+    cptB = loadCPT('/home/cendas/GOES16-Files/CodeProcess/Colortables/GMT_hot.cpt')   
+    cptA = loadCPT('/home/cendas/GOES16-Files/CodeProcess/Colortables/Square Root Visible Enhancement.cpt')
     # Makes a linear interpolation
-    cpt_convert = LinearSegmentedColormap('cpt', cpt) 
+    cpt_convertA = LinearSegmentedColormap('cpt', cptA) 
+    cpt_convertB = LinearSegmentedColormap('cpt', cptB) 
     # Plot the GOES-16 channel with the converted CPT colors (you may alter the min and max to match your preference)
-    bmap.imshow(data, origin='upper', cmap=cpt_convert, vmin=-80, vmax=-20)
-if int(Band) <= 6:
+   
+    pa = bmap.imshow(dataB, origin='upper', cmap=cpt_convertA, vmin=-80, vmax=-20)       
+    pb = bmap.imshow(dataA, origin='upper', cmap=cpt_convertB, vmin=-20, vmax=-5) 
+
+
+elif (int(Band) > 10 and int(Band) <= 14) or (int(Band) == 16):
+   # Converts a CPT file to be used in Python
+   cptB = loadCPT('/home/cendas/GOES16-Files/CodeProcess/Colortables/Rainbow.cpt')   
+   cptA = loadCPT('/home/cendas/GOES16-Files/CodeProcess/Colortables/Square Root Visible Enhancement.cpt')
+   # Makes a linear interpolation
+   cpt_convertA = LinearSegmentedColormap('cpt', cptA) 
+   cpt_convertB = LinearSegmentedColormap('cpt', cptB) 
+   # Plot the GOES-16 channel with the converted CPT colors (you may alter the min and max to match your preference)
+   
+   pa = bmap.imshow(dataA, origin='upper', cmap=cpt_convertA, vmin=-20, vmax=100)       
+   pb = bmap.imshow(dataB, origin='upper', cmap=cpt_convertB, vmin=-80, vmax=-20) 
+
+if int(Band) <=7 or int(Band) == 15:
     # Insert the colorbar at the bottom
     cb = bmap.colorbar(location='right', size = '8.0%', pad = '4%', ticks=[20, 40, 60, 80])    
     cb.ax.set_xticklabels(['20', '40', '60', '80'])
@@ -170,8 +167,8 @@ year = int(Start[0:4])
 dayjulian = int(Start[4:7]) - 1 # Subtract 1 because the year starts at "0"
 dayconventional = datetime.datetime(year,1,1) + datetime.timedelta(dayjulian) # Convert from julian to conventional
 date = dayconventional.strftime('%d-%b-%Y') # Format the date according to the strftime directives
-timeScan = Start [7:9] + ":" + Start [9:11] + ":" + Start [11:13] + " UTC" # Time of the Start of the Scan
-
+timeScan = Start [7:9] + ":" + Start [9:11] + ":" + Start [11:13] # Time of the Start of the Scan
+Id = Start
 # Get the unit based on the channel. If channels 1 trough 6 is Albedo. If channels 7 to 16 is BT.
 if int(Band) <= 6:
     Unit = "Refletancia"
@@ -179,7 +176,7 @@ else:
     Unit = "Temperatura de Topo de Nuvem [°C]"
  
 # Choose a title for the plot
-Title = " GOES-16 ABI CMI Band " + str(Band) + "       " + Unit + "       " + date + "       " + timeScan
+Title = " GOES-16 ABI CMI Band " + str(Band) + "       " + Unit + "       " + date + "       " + timeScan + " UTC"
 Latitude = "Latitude"
 Longitude = "Longitude"
 ColorBarLegend = "Temperatura de Topo de Nuvem [°C]"
@@ -230,7 +227,7 @@ except:
     date_saved = dateData[1] + '-' + dateData[2] + '-' + dateData[4]
 
 # Save the result as a PNG
-plt.savefig('/home/cendas/GOES16-Files/Output/RJ/Projections/CH'+str(Band)+'/RJ_G16_C' + str(Band) + '_' + date + '_' + time_saved + '.tif', dpi=DPI, pad_inches=0,bbox_inches='tight', transparent=True)
+plt.savefig('/home/cendas/GOES16-Files/Output/RJ/Projections/CH'+str(Band)+'/RJ_G16_C' + str(Band) + '_' + date + '_' + time_saved + 'UTC-ID_' + Id +'.tif', dpi=DPI, pad_inches=0,bbox_inches='tight', transparent=True)
 plt.close()
  
 # Add to the log file (called "G16_Log.txt") the NetCDF file name that I just processed.

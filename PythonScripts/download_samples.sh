@@ -40,24 +40,24 @@ echo "GOES16 ABI data downloader"
 #
 # YEAR OF INTEREST
 # YEARS='2019'
-YEARS=`date "+%Y"`
+YEARS=`date -u "+%Y"`
  
 # DAYS OF THE YEAR
 # Can use this link to find out: https://www.esrl.noaa.gov/gmd/grad/neubrew/Calendar.jsp
 # Example: 275 for October 2nd, 2017
 # NOTE: There is only about 60 days previous to the current date available
 #DAYS="204"
-DAYS=`date "+%j"`
+DAYS=`date -u "+%j"`
 
 # HOUR OF THE DAY
-HOURS=`date "+%H"`
+HOURS=`date -u "+%H"`
 
 echo $DAYS >> dataarquivo.txt
 echo $HOURS > dataarquivo.txt
  
 # CHANNELS
 # Example: CHANNELS='C01 C02 C03 C04 C05 C06 C07 C08 C09 C10 C11 C12 C13 C14 C15 C16'
-CHANNELS='C01 C02 C03 C04 C05 C06 C07 C08 C09 C10 C11 C12 C13 C14 C15 C16'
+CHANNELS='C13'
  
 # ABI PRODUCTS
 # For a description look into:
