@@ -31,8 +31,20 @@ ls -t | tail -n +11 | xargs rm --
 
 done
 
+/home/cendas/miniconda3/envs/DataEnv/bin/python3 /home/cendas/GOES16-Files/CodeProcess/PythonScripts/monitorSistConvRJ.py
+
+#export WORK='/home/cendas/GOES16-Files/Output/RJ/SistConvectivos/'
+
+#cd $WORK
+
+#ls -t | tail -n +11 | xargs rm --
+
+
+
 #Deixa apenas os 160 arquivos NetCDF no diretorio
 export WORK='/home/cendas/GOES16-Files/Samples/'
 cd $WORK
 
 ls -t | tail -n +161 | xargs rm 
+
+
