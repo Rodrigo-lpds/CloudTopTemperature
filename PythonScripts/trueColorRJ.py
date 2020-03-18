@@ -26,12 +26,14 @@ from netCDF4 import Dataset # Import the NetCDF Python interface
 
 # Load the Data =======================================================================================
 # Path to the GOES-16 image file
-#pathCH1 = sys.argv[1]
-#pathCH2 = sys.argv[2]
-#pathCH3 = sys.argv[3]
-pathCH1 = '/home/cendas/PythonTest/OR_ABI-L2-CMIPF-M6C01_G16_s20200711300179_e20200711309487_c20200711309562.nc'
-pathCH2 = '/home/cendas/PythonTest/OR_ABI-L2-CMIPF-M6C02_G16_s20200711300179_e20200711309487_c20200711309564.nc'
-pathCH3 = '/home/cendas/PythonTest/OR_ABI-L2-CMIPF-M6C03_G16_s20200711300179_e20200711309487_c20200711309564.nc'
+print(sys.argv[1])
+print(sys.argv[2])
+pathCH1 = sys.argv[1]
+pathCH2 = sys.argv[2]
+pathCH3 = sys.argv[3]
+#pathCH1 = '/home/cendas/GOES16-Files/Samples/OR_ABI-L2-CMIPF-M6C01_G16_s20200781440179_e20200781449487_c20200781449573.nc'
+#pathCH2 = '/home/cendas/GOES16-Files/Samples/OR_ABI-L2-CMIPF-M6C02_G16_s20200781440179_e20200781449487_c20200781449572.nc'
+#pathCH3 = '/home/cendas/GOES16-Files/Samples/OR_ABI-L2-CMIPF-M6C03_G16_s20200781440179_e20200781449487_c20200781449574.nc'
 # Open the file using the NetCDF4 library
 nc = Dataset(pathCH2)#Usar como parametro o canal2
 
@@ -123,8 +125,10 @@ plt.close()
 # Add to the log file (called "G16_Log.txt") the NetCDF file name that I just processed.
 
 # If the file doesn't exists, it will create one.
-#with open('/home/cendas/GOES16-Files/Output/RJ/G16_Log.txt', 'a') as log:
-# log.write(path.replace('\\\\', '\\') + '\n')
+with open('/home/cendas/GOES16-Files/CodeProcess/PythonScripts/TrueColor.txt', 'a') as log:
+ log.write(pathCH1.replace('\\\\', '\\') + '\n')
+ log.write(pathCH2.replace('\\\\', '\\') + '\n')
+ log.write(pathCH3.replace('\\\\', '\\') + '\n')
 #======================================================================================================
 
 # Export the result to GeoTIFF
