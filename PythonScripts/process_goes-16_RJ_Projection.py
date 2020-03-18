@@ -84,6 +84,9 @@ else:
 # Define the size of the saved picture=================================================================
 DPI = 150
 fig = plt.figure(figsize=(data.shape[1]/float(DPI), data.shape[0]/float(DPI)), frameon=False, dpi=DPI)
+
+print(data.shape)
+
 ax = plt.Axes(fig, [0., 0., 1., 1.])
 ax.set_axis_off()
 fig.add_axes(ax)
@@ -227,7 +230,7 @@ except:
     date_saved = dateData[1] + '-' + dateData[2] + '-' + dateData[4]
 
 # Save the result as a PNG
-plt.savefig('/home/cendas/GOES16-Files/Output/RJ/Projections/CH'+str(Band)+'/RJ_G16_C' + str(Band) + '_' + date + '_' + time_saved + 'UTC-ID_' + Id +'.tif', dpi=DPI, pad_inches=0,bbox_inches='tight', transparent=True)
+plt.savefig('/home/cendas/GOES16-Files/Output/RJ/Projections/CH'+str(Band)+'/RJ_G16_C' + str(Band) + '_' + date + '_' + time_saved + 'UTC-ID_' + Id +'.tif', dpi=DPI, pad_inches=0, transparent=True)
 plt.close()
  
 # Add to the log file (called "G16_Log.txt") the NetCDF file name that I just processed.
@@ -238,6 +241,6 @@ with open('/home/cendas/GOES16-Files/Output/RJ/G16_Log.txt', 'a') as log:
 #======================================================================================================
 
 # Export the result to GeoTIFF
-#driver = gdal.GetDriverByName('GTiff')
-#driver.CreateCopy('/home/cendas/Documents/VLAB/Output/RJ_Projections/Channel_13.tif', grid, 0)
+driver = gdal.GetDriverByName('GTiff')
+driver.CreateCopy('/home/cendas/GOES16-Files/Output/RJ/ProjectionsGEOTIF/CH'+str(Band)+'/RJ_G16_C' + str(Band) + '_' + date + '_' + time_saved+'.tif', grid, 0)
 #======================================================================================================

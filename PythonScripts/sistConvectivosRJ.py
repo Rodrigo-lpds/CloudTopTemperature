@@ -165,12 +165,9 @@ horas = ['00','01','02','03','04','05','06','07','08','09','10','11','12','13','
 # Converting from julian day to dd-mm-yyyy
 year = int(Start[0:4])
 dayjulian = int(Start[4:7]) - 1 # Subtract 1 because the year starts at "0"
-dayconventional = datetime.datetime(year,1,1) + datetime.timedelta(dayjulian) # Convert from julian to conventional
 
-date = dayconventional.strftime('%d-%b-%Y') # Format the date according to the strftime directives
 
-month = dayconventional.strftime('%m')
-day = dayconventional.strftime('%d')
+
 #hour = dayconventional.strftime('%d-%b-%Y')
 #minute = dayconventional.strftime('%d-%b-%Y')
 
@@ -199,6 +196,18 @@ minutoZero = ""
 Title = "" 
 index = horas.index(time_saved[:2])
 hora = horas[index - 3]
+if (index > 2):
+  dayconventional = datetime.datetime(year,1,1) + datetime.timedelta(dayjulian) # Convert from julian to conventional
+  date = dayconventional.strftime('%d-%b-%Y') # Format the date according to the strftime directives
+  month = dayconventional.strftime('%m')
+  day = dayconventional.strftime('%d')
+else: 
+  dayconventional = datetime.datetime(year,1,1) + datetime.timedelta(dayjulian-1) # Convert from julian to conventional
+  date = dayconventional.strftime('%d-%b-%Y') # Format the date according to the strftime directives
+  month = dayconventional.strftime('%m')
+  day = dayconventional.strftime('%d')
+
+
 if minute == 0:
   minutoZero = str(minute) + '0'
   Title = " GOES-16 ABI CMI Band " + str(Band) + "       " + Unit + "       " + date + "       " + hora +':'+ minutoZero  

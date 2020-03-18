@@ -57,8 +57,8 @@ echo $HOURS > dataarquivo.txt
  
 # CHANNELS
 # Example: CHANNELS='C01 C02 C03 C04 C05 C06 C07 C08 C09 C10 C11 C12 C13 C14 C15 C16'
-CHANNELS='C13'
- 
+#CHANNELS='C01 C02 C03 C04 C05 C06 C07 C08 C09 C10 C11 C12 C13 C14 C15 C16'
+CHANNELS='C01 C02 C03 C13'
 # ABI PRODUCTS
 # For a description look into:
 # https://aws.amazon.com/public-datasets/goes/
