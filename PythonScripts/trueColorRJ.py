@@ -26,9 +26,6 @@ from netCDF4 import Dataset # Import the NetCDF Python interface
 
 # Load the Data =======================================================================================
 # Path to the GOES-16 image file
-print(sys.argv[1])
-print(sys.argv[2])
-print(sys.argv[3])
 pathCH1 = sys.argv[1]
 pathCH2 = sys.argv[2]
 pathCH3 = sys.argv[3]
@@ -118,9 +115,16 @@ logo_Baia = plt.imread("/home/cendas/GOES16-Files/CodeProcess/Logos/baia_logo_RJ
 plt.figimage(logo_Lamce,  1300, 60, zorder=3, alpha = 1, origin = 'upper') 
 plt.figimage(logo_Baia, 120, 60, zorder=3, alpha = 1, origin = 'upper')
 
-
+# Search for the Scan start in the file name
+Start = (pathCH2[pathCH2.find("_s")+2:pathCH2.find("_e")])
+year = int(Start[0:4])
+dayjulian = int(Start[4:7]) - 1 # Subtract 1 because the year starts at "0"
+dayconventional = datetime.datetime(year,1,1) + datetime.timedelta(dayjulian) # Convert from julian to conventional
+date = dayconventional.strftime('%d-%b-%Y') # Format the date according to the strftime directives
+timeScan = Start [7:9] + ":" + Start [9:11] + ":" + Start [11:13] # Time of the Start of the Scan
+ 
 # Save the result as a PNG
-plt.savefig('/home/cendas/GOES16-Files/CodeProcess/PythonScripts/TrueColorTest.tif', dpi=DPI, pad_inches=0, transparent=True)
+plt.savefig('/home/cendas/GOES16-Files/CodeProcess/PythonScripts/TrueColorTest'+date+" "+timeScan+'.tif', dpi=DPI, pad_inches=0, transparent=True)
 plt.close()
  
 # Add to the log file (called "G16_Log.txt") the NetCDF file name that I just processed.

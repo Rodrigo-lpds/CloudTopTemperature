@@ -5,7 +5,7 @@ import glob # Unix style pathname pattern expansion
 import os # Miscellaneous operating system interfaces
  
 # Directory where you have the GOES-16 Files
-dirname = '/home/cendas/GOES16-Files/CodeProcess/PythonScripts/samples/'
+dirname = '/home/cendas/GOES16-Files/Samples/'
  
 # Put all file names on the directory in a list
 G16_images = []
@@ -28,7 +28,7 @@ for posi in range(len(singular)):
       #print(G16_images[count])
       pass
   #print()  
-#print(G16_images)sss
+#print(G16_images)
 
 # If the log file doesn't exist yet, create one
 file = open('/home/cendas/GOES16-Files/CodeProcess/PythonScripts/TrueColor.txt', 'a')
@@ -48,7 +48,7 @@ logTrueColor = [x.strip() for x in logTrueColor]
 ch01 = ""
 ch02 = ""
 ch03 = ""
-
+#0 2 4 1 3 5
 validateCH = []
 pace = int((len(G16_images))/3)
 G16_images =  sorted(G16_images)
@@ -64,6 +64,10 @@ for x in range (int(len(G16_images)/3)):
   print(logTrueColor.count (ch01))
   print(logTrueColor.count (ch02))
   print(logTrueColor.count (ch03))
+  print(ch01)
+  print(ch02)
+  print(ch03)
+  
   
   if logTrueColor.count (ch01) == 0:
     validateCH01 = True
@@ -77,11 +81,12 @@ for x in range (int(len(G16_images)/3)):
     validateCH.append (ch03)
 
 #print (G16_images)
-print()
+#print()
 #print (logTrueColor)  
 #print()    
-print (validateCH)   
-    
+   
+
+
   
 # Compare the directory list with the file list
 # Loop through all files in the directory
@@ -92,6 +97,6 @@ print (validateCH)
 #  os.system("/home/cendas/miniconda3/envs/DataEnv/bin/python3 " + "\"/home/cendas/GOES16-Files/CodeProcess/PythonScripts/process_goes-16_RJ_Projection.py\"" + " " + "\"" + x.replace('\\','\\\\') + "\"")
   #os.system("/home/cendas/miniconda3/envs/DataEnv/bin/python3 " + "\"/home/cendas/GOES16-Files/CodeProcess/PythonScripts/TemperatureDataToGeojsonRJ.py\"" + " " + "\"" + x.replace('\\','\\\\') + "\"")
   
-#for x in range (int(len(logTrueColor)/3)): #De 3 em 3
+for x in range (int(len(validateCH)/3)): #De 3 em 3
   
-#  os.system("/home/cendas/miniconda3/envs/DataEnv/bin/python3 " + "\"/home/cendas/GOES16-Files/CodeProcess/PythonScripts/trueColorRJ.py\"" + " " + logTrueColor[x].replace('\\','\\\\') + " "+ logTrueColor[x+1].replace('\\','\\\\')+ " " + logTrueColor[x+2].replace('\\','\\\\'))
+  os.system("/home/cendas/miniconda3/envs/DataEnv/bin/python3 " + "\"/home/cendas/GOES16-Files/CodeProcess/PythonScripts/trueColorRJ.py\"" + " " + validateCH[3*x].replace('\\','\\\\') + " "+ validateCH[3*x+1].replace('\\','\\\\')+ " " + validateCH[3*x+2].replace('\\','\\\\'))
