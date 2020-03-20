@@ -28,6 +28,7 @@ from netCDF4 import Dataset # Import the NetCDF Python interface
 # Path to the GOES-16 image file
 print(sys.argv[1])
 print(sys.argv[2])
+print(sys.argv[3])
 pathCH1 = sys.argv[1]
 pathCH2 = sys.argv[2]
 pathCH3 = sys.argv[3]
@@ -119,7 +120,7 @@ plt.figimage(logo_Baia, 120, 60, zorder=3, alpha = 1, origin = 'upper')
 
 
 # Save the result as a PNG
-plt.savefig('/home/cendas/GOES16-Files/CodeProcess/PythonScripts/TrueColor.tif', dpi=DPI, pad_inches=0, transparent=True)
+plt.savefig('/home/cendas/GOES16-Files/CodeProcess/PythonScripts/TrueColorTest.tif', dpi=DPI, pad_inches=0, transparent=True)
 plt.close()
  
 # Add to the log file (called "G16_Log.txt") the NetCDF file name that I just processed.

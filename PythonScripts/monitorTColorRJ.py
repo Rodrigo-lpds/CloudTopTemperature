@@ -5,7 +5,7 @@ import glob # Unix style pathname pattern expansion
 import os # Miscellaneous operating system interfaces
  
 # Directory where you have the GOES-16 Files
-dirname = '/home/cendas/GOES16-Files/Samples/'
+dirname = '/home/cendas/GOES16-Files/CodeProcess/PythonScripts/samples/'
  
 # Put all file names on the directory in a list
 G16_images = []
@@ -16,19 +16,19 @@ for filename in sorted(glob.glob(dirname+'OR_ABI-L2-CMIPF-M6C02*.nc')):
 for filename in sorted(glob.glob(dirname+'OR_ABI-L2-CMIPF-M6C03*.nc')):
   G16_images.append(filename)
 
-cou = 0
 singular = []
 for item in G16_images:
   Id=item.split('_')[3][1:]
   if Id not in singular:
     singular.append(Id)
+
 for posi in range(len(singular)):    
   for count in range(len(G16_images)):
     if G16_images[count].find(singular[posi]) != -1:
       #print(G16_images[count])
-      cou +=1
+      pass
   #print()  
-
+#print(G16_images)
 
 # If the log file doesn't exist yet, create one
 file = open('/home/cendas/GOES16-Files/CodeProcess/PythonScripts/TrueColor.txt', 'a')
@@ -57,4 +57,4 @@ logTrueColor = [x.strip() for x in logTrueColor]
   
 for x in range (int(len(logTrueColor)/3)): #De 3 em 3
   
-  os.system("/home/cendas/miniconda3/envs/DataEnv/bin/python3 " + "\"/home/cendas/GOES16-Files/CodeProcess/PythonScripts/trueColorRJ.py\"" + " " + "\"" + logTrueColor[x].replace('\\','\\\\') + " " + "\"" + logTrueColor[x+1].replace('\\','\\\\')+ " " + "\"" + logTrueColor[x+2].replace('\\','\\\\') + " " + "\"" )
+  os.system("/home/cendas/miniconda3/envs/DataEnv/bin/python3 " + "\"/home/cendas/GOES16-Files/CodeProcess/PythonScripts/trueColorRJ.py\"" + " " + logTrueColor[x].replace('\\','\\\\') + " "+ logTrueColor[x+1].replace('\\','\\\\')+ " " + logTrueColor[x+2].replace('\\','\\\\'))
