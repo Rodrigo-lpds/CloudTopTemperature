@@ -96,8 +96,8 @@ ax = plt.axis('off')
 bmap = Basemap(llcrnrlon=extent[0], llcrnrlat=extent[1], urcrnrlon=extent[2], urcrnrlat=extent[3], epsg=4326)
 
 # Draw the countries and Brazilian states shapefiles
-bmap.readshapefile('/home/cendas/GOES16-Files/CodeProcess/Shapefiles/BRA_adm1','BRA_adm1',linewidth=0.10,color='#000000')
-bmap.readshapefile('/home/cendas/GOES16-Files/CodeProcess/Shapefiles/ne_10m_coastline','ne_10m_0_coastline',linewidth=0.10,color='#000000')
+bmap.readshapefile('/home/cendas/GOES16_WS_Rodrigo/CloudTopTemperature/Shapefiles/BRA_adm1','BRA_adm1',linewidth=0.10,color='#000000')
+bmap.readshapefile('/home/cendas/GOES16_WS_Rodrigo/CloudTopTemperature/Shapefiles/ne_10m_coastline','ne_10m_0_coastline',linewidth=0.10,color='#000000')
 
 # Draw parallels and meridians
 bmap.drawparallels(np.arange(-90.0, 90.0, 5), linewidth=0.3, dashes=[4, 4], color='white', labels=[True,False,False,True], fmt='%g', labelstyle="+/-", size=10)
@@ -108,7 +108,7 @@ dataB = masked_array(data,data>=-20)#TIRA OS MAIORES QUE -20
 
 if int(Band) <=7 or int(Band) == 15:
     # Converts a CPT file to be used in Python
-    cpt = loadCPT('/home/cendas/GOES16-Files/CodeProcess/Colortables/Square Root Visible Enhancement.cpt')
+    cpt = loadCPT('/home/cendas/GOES16_WS_Rodrigo/CloudTopTemperature/Colortables/Square Root Visible Enhancement.cpt')
     # Makes a linear interpolation
     cpt_convert = LinearSegmentedColormap('cpt', cpt)
     # Plot the GOES-16 channel with the converted CPT colors (you may alter the min and max to match your preference)
@@ -116,8 +116,8 @@ if int(Band) <=7 or int(Band) == 15:
 
 elif  int(Band) >7 and int(Band) <=10:
     # Converts a CPT file to be used in Python
-    cptB = loadCPT('/home/cendas/GOES16-Files/CodeProcess/Colortables/GMT_hot.cpt')   
-    cptA = loadCPT('/home/cendas/GOES16-Files/CodeProcess/Colortables/Square Root Visible Enhancement.cpt')
+    cptB = loadCPT('/home/cendas/GOES16_WS_Rodrigo/CloudTopTemperature/Colortables/GMT_hot.cpt')   
+    cptA = loadCPT('/home/cendas/GOES16_WS_Rodrigo/CloudTopTemperature/Colortables/Square Root Visible Enhancement.cpt')
     # Makes a linear interpolation
     cpt_convertA = LinearSegmentedColormap('cpt', cptA) 
     cpt_convertB = LinearSegmentedColormap('cpt', cptB) 
@@ -129,8 +129,8 @@ elif  int(Band) >7 and int(Band) <=10:
 
 elif (int(Band) > 10 and int(Band) <= 14) or (int(Band) == 16):
    # Converts a CPT file to be used in Python
-   cptB = loadCPT('/home/cendas/GOES16-Files/CodeProcess/Colortables/Rainbow.cpt')   
-   cptA = loadCPT('/home/cendas/GOES16-Files/CodeProcess/Colortables/Square Root Visible Enhancement.cpt')
+   cptB = loadCPT('/home/cendas/GOES16_WS_Rodrigo/CloudTopTemperature/Colortables/Rainbow.cpt')   
+   cptA = loadCPT('/home/cendas/GOES16_WS_Rodrigo/CloudTopTemperature/Colortables/Square Root Visible Enhancement.cpt')
    # Makes a linear interpolation
    cpt_convertA = LinearSegmentedColormap('cpt', cptA) 
    cpt_convertB = LinearSegmentedColormap('cpt', cptB) 
@@ -248,8 +248,8 @@ plt.text(extent[2] + lon_difference * 0.2, extent[1] + lat_difference * 0.5 ,Col
 #plt.figimage(logo_NOAA, 110, 40, zorder=3, alpha = 1, origin = 'upper')
 #plt.figimage(logo_GOES, 195, 40, zorder=3, alpha = 1, origin = 'upper')
 
-logo_Lamce = plt.imread("/home/cendas/GOES16-Files/CodeProcess/Logos/logo_lamce_RJ.png")
-logo_Baia = plt.imread("/home/cendas/GOES16-Files/CodeProcess/Logos/baia_logo_RJ.png")
+logo_Lamce = plt.imread("/home/cendas/GOES16_WS_Rodrigo/CloudTopTemperature/Logos/logo_lamce_RJ.png")
+logo_Baia = plt.imread("/home/cendas/GOES16_WS_Rodrigo/CloudTopTemperature/Logos/baia_logo_RJ.png")
 
 
 plt.figimage(logo_Lamce,  1300, 60, zorder=3, alpha = 1, origin = 'upper') 
@@ -260,26 +260,26 @@ plt.figimage(logo_Baia, 120, 60, zorder=3, alpha = 1, origin = 'upper')
 # Format: sistconvectivos_rj_${ano}${mes}${dia}_${hora}15.jpg
 
 if minute == 0:
-  plt.savefig('/home/cendas/GOES16-Files/Output/RJ/SistConvectivos/sistconvectivos_rj'+ '_' + str(year) + str(month) + str(day) + '_' + hora + minutoZero+ '.jpg', dpi=DPI, pad_inches=0,bbox_inches='tight', transparent=True)
+  plt.savefig('/home/cendas/GOES16_WS_Rodrigo/CloudTopTemperature/Output/RJ/SistConvectivos/sistconvectivos_rj'+ '_' + str(year) + str(month) + str(day) + '_' + hora + minutoZero+ '.jpg', dpi=DPI, pad_inches=0,bbox_inches='tight', transparent=True)
   plt.close()
-  with open('/home/cendas/GOES16-Files/Output/RJ/SistConvectivos/Lista_JPG.txt', 'a') as log:
+  with open('/home/cendas/GOES16_WS_Rodrigo/CloudTopTemperature/Output/RJ/SistConvectivos/Lista_JPG.txt', 'a') as log:
     log.write('sistconvectivos_rj'+ '_' + str(year) + str(month) + str(day) + '_' + hora + minutoZero+ '.jpg' + '\n')
 
 elif minute == 30:
-  plt.savefig('/home/cendas/GOES16-Files/Output/RJ/SistConvectivos/sistconvectivos_rj'+ '_' + str(year) + str(month) + str(day) + '_' + hora + str(minute)+ '.jpg', dpi=DPI, pad_inches=0,bbox_inches='tight', transparent=True)
+  plt.savefig('/home/cendas/GOES16_WS_Rodrigo/CloudTopTemperature/Output/RJ/SistConvectivos/sistconvectivos_rj'+ '_' + str(year) + str(month) + str(day) + '_' + hora + str(minute)+ '.jpg', dpi=DPI, pad_inches=0,bbox_inches='tight', transparent=True)
   plt.close()
-  with open('/home/cendas/GOES16-Files/Output/RJ/SistConvectivos/Lista_JPG.txt', 'a') as log:
+  with open('/home/cendas/GOES16_WS_Rodrigo/CloudTopTemperature/Output/RJ/SistConvectivos/Lista_JPG.txt', 'a') as log:
     log.write('sistconvectivos_rj'+ '_' + str(year) + str(month) + str(day) + '_' + hora + str(minute)+ '.jpg' + '\n')
 
 elif minute == 15 or minute == 45:
-  plt.savefig('/home/cendas/GOES16-Files/Output/RJ/SistConvectivos/sistconvectivos_rj'+ '_' + str(year) + str(month) + str(day) + '_' + hora + str(minute)+ '.jpg', dpi=DPI, pad_inches=0,bbox_inches='tight', transparent=True)
+  plt.savefig('/home/cendas/GOES16_WS_Rodrigo/CloudTopTemperature/Output/RJ/SistConvectivos/sistconvectivos_rj'+ '_' + str(year) + str(month) + str(day) + '_' + hora + str(minute)+ '.jpg', dpi=DPI, pad_inches=0,bbox_inches='tight', transparent=True)
   plt.close()
-  with open('/home/cendas/GOES16-Files/Output/RJ/SistConvectivos/Lista_JPG.txt', 'a') as log:
+  with open('/home/cendas/GOES16_WS_Rodrigo/CloudTopTemperature/Output/RJ/SistConvectivos/Lista_JPG.txt', 'a') as log:
     log.write('sistconvectivos_rj'+ '_' + str(year) + str(month) + str(day) + '_' + hora + str(minute)+ '.jpg' + '\n')
 # Add to the log file (called "G16_Log.txt") the NetCDF file name that I just processed.
 
 # If the file doesn't exists, it will create one.
-with open('/home/cendas/GOES16-Files/Output/RJ/SistConvectivos/G16_Log.txt', 'a') as log:
+with open('/home/cendas/GOES16_WS_Rodrigo/CloudTopTemperature/Output/RJ/SistConvectivos/G16_Log.txt', 'a') as log:
  log.write(path.replace('\\\\', '\\') + '\n')
 #======================================================================================================
 

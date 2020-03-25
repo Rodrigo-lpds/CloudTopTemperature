@@ -85,7 +85,7 @@ else:
 DPI = 150
 fig = plt.figure(figsize=(data.shape[1]/float(DPI), data.shape[0]/float(DPI)), frameon=False, dpi=DPI)
 
-print(data.shape)
+#print(data.shape)
 
 ax = plt.Axes(fig, [0., 0., 1., 1.])
 ax.set_axis_off()
@@ -99,8 +99,8 @@ ax = plt.axis('off')
 bmap = Basemap(llcrnrlon=extent[0], llcrnrlat=extent[1], urcrnrlon=extent[2], urcrnrlat=extent[3], epsg=4326)
 
 # Draw the countries and Brazilian states shapefiles
-bmap.readshapefile('/home/cendas/GOES16-Files/CodeProcess/Shapefiles/BRA_adm1','BRA_adm1',linewidth=0.10,color='#000000')
-bmap.readshapefile('/home/cendas/GOES16-Files/CodeProcess/Shapefiles/ne_10m_coastline','ne_10m_0_coastline',linewidth=0.10,color='#000000')
+bmap.readshapefile('/home/cendas/GOES16_WS_Rodrigo/CloudTopTemperature/Shapefiles/BRA_adm1','BRA_adm1',linewidth=0.10,color='#000000')
+bmap.readshapefile('/home/cendas/GOES16_WS_Rodrigo/CloudTopTemperature/Shapefiles/ne_10m_coastline','ne_10m_0_coastline',linewidth=0.10,color='#000000')
 
 # Draw parallels and meridians
 bmap.drawparallels(np.arange(-90.0, 90.0, 5), linewidth=0.3, dashes=[4, 4], color='white', labels=[True,False,False,True], fmt='%g', labelstyle="+/-", size=10)
@@ -111,7 +111,7 @@ dataB = masked_array(data,data>=-20)#TIRA OS MAIORES QUE -20
 
 if int(Band) <=7 or int(Band) == 15:
     # Converts a CPT file to be used in Python
-    cpt = loadCPT('/home/cendas/GOES16-Files/CodeProcess/Colortables/Square Root Visible Enhancement.cpt')
+    cpt = loadCPT('/home/cendas/GOES16_WS_Rodrigo/CloudTopTemperature/Colortables/Square Root Visible Enhancement.cpt')
     # Makes a linear interpolation
     cpt_convert = LinearSegmentedColormap('cpt', cpt)
     # Plot the GOES-16 channel with the converted CPT colors (you may alter the min and max to match your preference)
@@ -119,8 +119,8 @@ if int(Band) <=7 or int(Band) == 15:
 
 elif  int(Band) >7 and int(Band) <=10:
     # Converts a CPT file to be used in Python
-    cptB = loadCPT('/home/cendas/GOES16-Files/CodeProcess/Colortables/GMT_hot.cpt')   
-    cptA = loadCPT('/home/cendas/GOES16-Files/CodeProcess/Colortables/Square Root Visible Enhancement.cpt')
+    cptB = loadCPT('/home/cendas/GOES16_WS_Rodrigo/CloudTopTemperature/Colortables/GMT_hot.cpt')   
+    cptA = loadCPT('/home/cendas/GOES16_WS_Rodrigo/CloudTopTemperature/Colortables/Square Root Visible Enhancement.cpt')
     # Makes a linear interpolation
     cpt_convertA = LinearSegmentedColormap('cpt', cptA) 
     cpt_convertB = LinearSegmentedColormap('cpt', cptB) 
@@ -132,8 +132,8 @@ elif  int(Band) >7 and int(Band) <=10:
 
 elif (int(Band) > 10 and int(Band) <= 14) or (int(Band) == 16):
    # Converts a CPT file to be used in Python
-   cptB = loadCPT('/home/cendas/GOES16-Files/CodeProcess/Colortables/Rainbow.cpt')   
-   cptA = loadCPT('/home/cendas/GOES16-Files/CodeProcess/Colortables/Square Root Visible Enhancement.cpt')
+   cptB = loadCPT('/home/cendas/GOES16_WS_Rodrigo/CloudTopTemperature/Colortables/Rainbow.cpt')   
+   cptA = loadCPT('/home/cendas/GOES16_WS_Rodrigo/CloudTopTemperature/Colortables/Square Root Visible Enhancement.cpt')
    # Makes a linear interpolation
    cpt_convertA = LinearSegmentedColormap('cpt', cptA) 
    cpt_convertB = LinearSegmentedColormap('cpt', cptB) 
@@ -211,8 +211,8 @@ plt.text(extent[2] + lon_difference * 0.2, extent[1] + lat_difference * 0.5 ,Col
 #plt.figimage(logo_NOAA, 110, 40, zorder=3, alpha = 1, origin = 'upper')
 #plt.figimage(logo_GOES, 195, 40, zorder=3, alpha = 1, origin = 'upper')
 
-logo_Lamce = plt.imread("/home/cendas/GOES16-Files/CodeProcess/Logos/logo_lamce_RJ.png")
-logo_Baia = plt.imread("/home/cendas/GOES16-Files/CodeProcess/Logos/baia_logo_RJ.png")
+logo_Lamce = plt.imread("/home/cendas/GOES16_WS_Rodrigo/CloudTopTemperature/Logos/logo_lamce_RJ.png")
+logo_Baia = plt.imread("/home/cendas/GOES16_WS_Rodrigo/CloudTopTemperature/Logos/baia_logo_RJ.png")
 
 
 plt.figimage(logo_Lamce,  1300, 60, zorder=3, alpha = 1, origin = 'upper') 
@@ -230,17 +230,17 @@ except:
     date_saved = dateData[1] + '-' + dateData[2] + '-' + dateData[4]
 
 # Save the result as a PNG
-plt.savefig('/home/cendas/GOES16-Files/Output/RJ/Projections/CH'+str(Band)+'/RJ_G16_C' + str(Band) + '_' + date + '_' + time_saved + 'UTC-ID_' + Id +'.tif', dpi=DPI, pad_inches=0, transparent=True)
+plt.savefig('/home/cendas/GOES16_WS_Rodrigo/CloudTopTemperature/Output/RJ/Projections/CH'+str(Band)+'/RJ_G16_C' + str(Band) + '_' + date + '_' + time_saved + 'UTC-ID_' + Id +'.tif', dpi=DPI, pad_inches=0, transparent=True)
 plt.close()
  
 # Add to the log file (called "G16_Log.txt") the NetCDF file name that I just processed.
 
 # If the file doesn't exists, it will create one.
-with open('/home/cendas/GOES16-Files/Output/RJ/G16_Log.txt', 'a') as log:
+with open('/home/cendas/GOES16_WS_Rodrigo/CloudTopTemperature/Output/RJ/Projections/G16_Log.txt', 'a') as log:
  log.write(path.replace('\\\\', '\\') + '\n')
 #======================================================================================================
 
 # Export the result to GeoTIFF
-driver = gdal.GetDriverByName('GTiff')
-driver.CreateCopy('/home/cendas/GOES16-Files/Output/RJ/ProjectionsGEOTIF/CH'+str(Band)+'/RJ_G16_C' + str(Band) + '_' + date + '_' + time_saved+'.tif', grid, 0)
+#driver = gdal.GetDriverByName('GTiff')
+#driver.CreateCopy('/home/cendas/GOES16-Files/Output/RJ/ProjectionsGEOTIF/CH'+str(Band)+'/RJ_G16_C' + str(Band) + '_' + date + '_' + time_saved+'.tif', grid, 0)
 #======================================================================================================

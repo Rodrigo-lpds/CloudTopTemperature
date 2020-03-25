@@ -93,8 +93,8 @@ ax = plt.axis('off')
 bmap = Basemap(llcrnrlon=extent[0], llcrnrlat=extent[1], urcrnrlon=extent[2], urcrnrlat=extent[3], epsg=4326)
 
 # Draw the countries and Brazilian states shapefiles
-bmap.readshapefile('/home/cendas/GOES16-Files/CodeProcess/Shapefiles/BRA_adm1','BRA_adm1',linewidth=0.10,color='#000000')
-bmap.readshapefile('/home/cendas/GOES16-Files/CodeProcess/Shapefiles/ne_10m_coastline','ne_10m_0_coastline',linewidth=0.10,color='#000000')
+bmap.readshapefile('/home/cendas/GOES16_WS_Rodrigo/CloudTopTemperature/Shapefiles/BRA_adm1','BRA_adm1',linewidth=0.10,color='#000000')
+bmap.readshapefile('/home/cendas/GOES16_WS_Rodrigo/CloudTopTemperature/Shapefiles/ne_10m_coastline','ne_10m_0_coastline',linewidth=0.10,color='#000000')
 
 # Draw parallels and meridians
 bmap.drawparallels(np.arange(-90.0, 90.0, 5.0), linewidth=0.3, dashes=[4, 4], color='white', labels=[True,False,False,True], fmt='%g', labelstyle="+/-", size=32)
@@ -113,8 +113,8 @@ if int(Band) <=7 or int(Band) == 15:
 
 elif  int(Band) >7 and int(Band) <=10:
     # Converts a CPT file to be used in Python
-    cptB = loadCPT('/home/cendas/GOES16-Files/CodeProcess/Colortables/GMT_hot.cpt')   
-    cptA = loadCPT('/home/cendas/GOES16-Files/CodeProcess/Colortables/Square Root Visible Enhancement.cpt')
+    cptB = loadCPT('/home/cendas/GOES16_WS_Rodrigo/CloudTopTemperature/Colortables/GMT_hot.cpt')   
+    cptA = loadCPT('/home/cendas/GOES16_WS_Rodrigo/CloudTopTemperature/Colortables/Square Root Visible Enhancement.cpt')
     # Makes a linear interpolation
     cpt_convertA = LinearSegmentedColormap('cpt', cptA) 
     cpt_convertB = LinearSegmentedColormap('cpt', cptB) 
@@ -126,8 +126,8 @@ elif  int(Band) >7 and int(Band) <=10:
 
 elif (int(Band) > 10 and int(Band) <= 14) or (int(Band) == 16):
    # Converts a CPT file to be used in Python
-   cptB = loadCPT('/home/cendas/GOES16-Files/CodeProcess/Colortables/Rainbow.cpt')   
-   cptA = loadCPT('/home/cendas/GOES16-Files/CodeProcess/Colortables/Square Root Visible Enhancement.cpt')
+   cptB = loadCPT('/home/cendas/GOES16_WS_Rodrigo/CloudTopTemperature/Colortables/Rainbow.cpt')   
+   cptA = loadCPT('/home/cendas/GOES16_WS_Rodrigo/CloudTopTemperature/Colortables/Square Root Visible Enhancement.cpt')
    # Makes a linear interpolation
    cpt_convertA = LinearSegmentedColormap('cpt', cptA) 
    cpt_convertB = LinearSegmentedColormap('cpt', cptB) 
@@ -206,8 +206,8 @@ plt.text(extent[2] + lon_difference * 0.2, extent[1] + lat_difference * 0.5 ,Col
 #plt.figimage(logo_GOES, 195, 40, zorder=3, alpha = 1, origin = 'upper')
 
 
-logo_Lamce = plt.imread("/home/cendas/GOES16-Files/CodeProcess/Logos/logo_lamce_SA.png")
-logo_Baia = plt.imread("/home/cendas/GOES16-Files/CodeProcess/Logos/baia_logo_SA.png")
+logo_Lamce = plt.imread("/home/cendas/GOES16_WS_Rodrigo/CloudTopTemperature/Logos/logo_lamce_SA.png")
+logo_Baia = plt.imread("/home/cendas/GOES16_WS_Rodrigo/CloudTopTemperature/Logos/baia_logo_SA.png")
 
 
 plt.figimage(logo_Lamce,  3500, 80, zorder=3, alpha = 1, origin = 'upper') 
@@ -227,12 +227,12 @@ except:
     date_saved = dateData[1] + '-' + dateData[2] + '-' + dateData[4]
 
 # Save the result as a PNG
-plt.savefig('/home/cendas/GOES16-Files/Output/South_America/Projections/CH'+ str(Band) +'/SA_G16_C' + str(Band) + '_' + date + '_' + time_saved + 'UTC-ID_' + Id+'.tif', dpi=DPI, pad_inches=0,bbox_inches='tight', transparent=True)
+plt.savefig('/home/cendas/GOES16_WS_Rodrigo/CloudTopTemperature/Output/South_America/Projections/CH'+ str(Band) +'/SA_G16_C' + str(Band) + '_' + date + '_' + time_saved + 'UTC-ID_' + Id+'.tif', dpi=DPI, pad_inches=0,bbox_inches='tight', transparent=True)
 plt.close()
  
 # Add to the log file (called "G16_Log.txt") the NetCDF file name that I just processed.
 # If the file doesn't exists, it will create one.
-with open('/home/cendas/GOES16-Files/Output/South_America/G16_Log.txt', 'a') as log:
+with open('/home/cendas/GOES16_WS_Rodrigo/CloudTopTemperature/Output/South_America/G16_Log.txt', 'a') as log:
  log.write(path.replace('\\\\', '\\') + '\n')
 #======================================================================================================
 
