@@ -75,7 +75,7 @@ else:
 
 # Define the size of the saved picture=================================================================
 DPI = 150
-fig = plt.figure(figsize=(data.shape[1]/float(DPI), data.shape[0]/float(DPI)), frameon=False, dpi=DPI)
+fig = plt.figure(figsize=(dataArray.shape[1]/float(DPI), dataArray.shape[0]/float(DPI)), frameon=False, dpi=DPI)
 ax = plt.Axes(fig, [0., 0., 1., 1.])
 ax.set_axis_off()
 fig.add_axes(ax)
@@ -95,7 +95,6 @@ bmap.readshapefile('/home/cendas/GOES16_WS_Rodrigo/CloudTopTemperature/Shapefile
 bmap.drawparallels(np.arange(-90.0, 90.0, 5), linewidth=0.3, dashes=[4, 4], color='white', labels=[True,False,False,True], fmt='%g', labelstyle="+/-", size=10)
 bmap.drawmeridians(np.arange(0.0, 360.0, 5), linewidth=0.3, dashes=[4, 4], color='white', labels=[True,False,False,True], fmt='%g', labelstyle="+/-", size=10)
 
-
 degreeLimit = -20
 dataAboveLimit = masked_array(dataArray,dataArray<degreeLimit) #dataArray with removed values (below -20) 
 dataBelowLimit = masked_array(dataArray,dataArray>=degreeLimit)#dataArray with removed values (above -20) 
@@ -106,7 +105,7 @@ if int(Band) <=7 or int(Band) == 15:
     # Makes a linear interpolation
     cptConvert = LinearSegmentedColormap('cpt', cpt)
     # Plot the GOES-16 channel with the converted CPT colors (you may alter the min and max to match your preference)
-    bmap.imshow(data, origin='upper', cmap=cpt_convert, vmin=0, vmax=1)  
+    bmap.imshow(dataArray, origin='upper', cmap=cpt_convert, vmin=0, vmax=1)  
 
 elif  int(Band) >7 and int(Band) <=10:
     # Converts a CPT file to be used in Python
@@ -169,7 +168,7 @@ else:
 Title = " GOES-16 ABI CMI Band " + str(Band) + "       " + Unit + "       " + date + "       " + timeScan + " UTC"
 Latitude = "Latitude"
 Longitude = "Longitude"
-ColorBarLegend = "Temperatura de Topo de Nuvem [°C]"
+ColorBarLabel = "Temperatura de Topo de Nuvem [°C]"
 
 # Add a black rectangle in the bottom to insert the image description
 lon_difference = (extent[2] - extent[0]) # Max Lon - Min Lon
@@ -184,7 +183,7 @@ plt.text(extent[0] + lon_difference * 0.5, extent[1] - lat_difference * 0.075,Lo
 plt.text(extent[0] + lon_difference * 0.5, extent[1] - lat_difference * 0.15," ", horizontalalignment='center', color = 'black', size=18)    
 
 plt.text(extent[0]- lon_difference * 0.15, extent[1] + lat_difference * 0.5 ,Latitude, verticalalignment ='center', rotation = "vertical", color = 'black', size=15) 
-plt.text(extent[2] + lon_difference * 0.2, extent[1] + lat_difference * 0.5 ,ColorBarLegend, verticalalignment ='center', rotation = "vertical", color = 'black', size=15)
+plt.text(extent[2] + lon_difference * 0.2, extent[1] + lat_difference * 0.5 ,ColorBarLabel, verticalalignment ='center', rotation = "vertical", color = 'black', size=15)
 
 # Add logos / images to the plot
 logo_Lamce = plt.imread("/home/cendas/GOES16_WS_Rodrigo/CloudTopTemperature/Logos/logo_lamce_RJ.png")
